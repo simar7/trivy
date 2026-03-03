@@ -5,6 +5,11 @@ on:
     workflows: ["Test", "Validate PR Title"]
     types: [completed]
 
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
 jobs:
   auto-ready-for-review:
     runs-on: ubuntu-24.04

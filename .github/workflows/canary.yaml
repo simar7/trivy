@@ -10,6 +10,12 @@ on:
       - '.github/workflows/canary.yaml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+  actions: write
+
 jobs:
   build-binaries:
     name: Build binaries

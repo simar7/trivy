@@ -7,6 +7,9 @@ on:
       - edited
       - synchronize
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: Validate PR title
@@ -129,7 +132,7 @@ jobs:
 
           # Basic format check (should match: type(scope): description or type: description)
           FORMAT_REGEX="^[a-z]+(\([a-z0-9+]+\))?!?: .+$"
-          if ! echo "$PR_TITLE" | grep -qE "$FORMAT_REGEX"; then
+          if ! printf '%s\n' "$PR_TITLE" | grep -qE "$FORMAT_REGEX"; then
             echo "Error: Invalid PR title format"
             echo "Expected format: <type>(<scope>): <description> or <type>: <description>"
             echo "Examples:"
@@ -141,8 +144,8 @@ jobs:
           fi
 
           # Extract type and scope for validation
-          TYPE=$(echo "$PR_TITLE" | sed -E 's/^([a-z]+)(\([a-z0-9+]+\))?!?: .+$/\1/')
-          SCOPE=$(echo "$PR_TITLE" | sed -E 's/^[a-z]+\(([a-z0-9+]+)\)!?: .+$/\1/; t; s/.*//')
+          TYPE=$(printf '%s' "$PR_TITLE" | sed -E 's/^([a-z]+)(\([a-z0-9+]+\))?!?: .+$/\1/')
+          SCOPE=$(printf '%s' "$PR_TITLE" | sed -E 's/^[a-z]+\(([a-z0-9+]+)\)!?: .+$/\1/; t; s/.*//')
 
           # Validate type
           if ! echo "$VALID_TYPES" | grep -qx "$TYPE"; then

@@ -4,6 +4,11 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
 jobs:
   release:
     name: Release
@@ -50,7 +55,9 @@ jobs:
         run: ci/deploy-rpm.sh
 
       - name: Import GPG key
-        run: echo -e "${{ secrets.GPG_KEY }}" | gpg --import
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+        run: printf '%s' "$GPG_KEY" | gpg --import
 
       - name: Create deb repository
         run: ci/deploy-deb.sh
